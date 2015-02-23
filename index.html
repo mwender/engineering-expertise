@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <title>@mwender - Sheetsee.js Demo</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!--<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>-->
+    <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js'></script>
+    <script type="text/javascript" src="bower_components/tabletop/src/tabletop.js"></script>
+    <script type="text/javascript" src='bower_components/sheetsee/js/sheetsee.js'></script>
+    <link rel="stylesheet" type="text/css" href="bower_components/sheetsee/css/sss.css">
+  </head>
+  <body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+          <div id="siteTable"></div>
+          <input id="siteTableFilter" type="text" placeholder="filter by.."></input>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script id="siteTable_template" type="text/html">
+    <table>
+      <tr>
+        <th class="tHeader">Category</th>
+        <th class="tHeader">Sub-category</th>
+        <th class="tHeader">Description</th>
+      </tr>
+      {{#rows}}
+      <tr>
+        <td>{{category}}</td>
+        <td>{{subcategory}}</td>
+        <td>{{description}}</td>
+      </tr>
+      {{/rows}}
+    </table>
+  </script>
+
+  <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        var URL = "1vKrZxXRC5ykUTTDAnAXk2Y57csD4BM-a2Z5NyCa52G8"
+        Tabletop.init( { key: URL, callback: showInfo, simpleSheet: true } )
+    })
+
+    function showInfo(data){
+        /*
+        for( var x = 0; x < data.length; x++ ){
+          console.log( data[x] )
+        }
+        */
+        var tableOptions = {
+          "data": data,
+          "tableDiv": "#siteTable",
+          "filterDiv": "#siteTableFilter",
+          "templateID": "siteTable_template"
+        };
+        Sheetsee.makeTable(tableOptions);
+        Sheetsee.initiateTableFilter(tableOptions);
+    }
+  </script>
+  </body>
+</html>

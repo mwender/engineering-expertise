@@ -1,0 +1,21 @@
+{
+  "name": "sheetsee-demo",
+  "version": "0.0.0",
+  "authors": [
+    "Michael Wender <michael@michaelwender.com>"
+  ],
+  "description": "Testing out sheetsee.js",
+  "main": "index.html",
+  "keywords": [
+    "javascript"
+  ],
+  "license": "GPLv2",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -11,7 +11,7 @@
     .table-pagination a{cursor: pointer;}
     .tHeader::after {content: " \2193 \2191 "; font-size: 10px; padding-left: 3px;}
     .noMatches {margin-left: 20px; font-size: 11px; visibility: hidden;}
-    .siteTable{position: relative;}
+    #siteTable{background-color: #eee; color: #999; text-align: center; height: 500px; line-height: 500px; font-size: 36px; font-weight: bold;}
     #Pagination{position: absolute; top: 0; right: 15px;}
     #Pagination a{
       display: inline-block;
@@ -58,7 +58,7 @@
             <span class="noMatches">no matches</span>
           </div>
 
-          <div id="siteTable"></div>
+          <div id="siteTable">Loading...</div>
       </div>
     </div>
   </div>
@@ -84,8 +84,8 @@
 
   <script type="text/javascript">
     $( document ).ready(function(){
-      var URL = "1vKrZxXRC5ykUTTDAnAXk2Y57csD4BM-a2Z5NyCa52G8"
-      Tabletop.init( { key: URL, callback: showInfo, simpleSheet: true } )
+      var URL = "1vKrZxXRC5ykUTTDAnAXk2Y57csD4BM-a2Z5NyCa52G8";
+      Tabletop.init( { key: URL, callback: showInfo, simpleSheet: true } );
     });
 
     function showInfo(data){
@@ -95,9 +95,10 @@
           "tableDiv": "#siteTable",
           "filterDiv": "#siteTableFilter",
           "templateID": "siteTable_template"
-        }
-        Sheetsee.makeTable( tableOptions )
-        Sheetsee.initiateTableFilter( tableOptions )
+        };
+        Sheetsee.makeTable( tableOptions );
+        Sheetsee.initiateTableFilter( tableOptions );
+        $( '#siteTable' ).css({'background-color': '#fff', 'color': 'inherit', 'height': 'inherit', 'line-height': 'inherit', 'font-size': 'inherit', 'font-weight': 'normal'});
     }
   </script>
   </body>

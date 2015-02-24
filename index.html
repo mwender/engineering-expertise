@@ -73,25 +73,66 @@
         <th class="tHeader">Description</th>
       </tr>
       {{#rows}}
-      <tr>
-        <td>{{category}}</td>
-        <td>{{subcategory}}</td>
-        <td>{{description}}</td>
-      </tr>
+      {{#logic}}
+        {{category}}
+        {{subcategory}}
+        {{description}}
+        {{rowclass}}
+      {{/logic}}
       {{/rows}}
     </table>
   </script>
 
   <script type="text/javascript">
     $( document ).ready(function(){
+      var currentCategory = '';
+      var rowNum = 0;
+      console.log('START: currentCategory = ' + currentCategory);
       var URL = "1vKrZxXRC5ykUTTDAnAXk2Y57csD4BM-a2Z5NyCa52G8";
-      Tabletop.init( { key: URL, callback: showInfo, simpleSheet: true, orderby: 'category' } );
+      Tabletop.init( {
+        key: URL,
+        callback: showInfo,
+        simpleSheet: true,
+        orderby: 'category',
+        postProcess: function(element){
+          if( currentCategory != element['category'] ){
+            currentCategory = element['category'];
+            rowNum++;
+          } else {
+            element['category'] = '';
+          }
+          element['rowclass'] = 'cat-' + rowNum;
+        }
+      } );
+
+      $('.container').on('click', '.show-cat', function(){
+        var catClass = $(this).attr('id');
+        var html = $(this).html();
+        if( 'Show' === html ){
+          $(this).html('Hide');
+        } else {
+          $(this).html('Show');
+        }
+        $('.ip.' + catClass).toggleClass('hidden');
+      });
     });
 
-    function showInfo(data){
+    function showInfo(data,currentCategory){
+
+        for( x = 0; x < data.length; x++ ){
+          data[x]['logic'] = function(){
+            return function(text, render){
+              if( '' != this.category ){
+                return '<tr><td class="' + this.rowclass + '" colspan="3">' + this.category + ' <span class="btn btn-default show-cat" id="' + this.rowclass + '">Show</span></td></tr><tr class="hidden ip ' + this.rowclass + '"><td>&nbsp;</td><td>' + render(this.subcategory) + '</td><td>' + render(this.description) + '</td></tr>';
+              } else {
+                return '<tr class="hidden ip ' + this.rowclass + '"><td>&nbsp;</td><td>' + render(this.subcategory) + '</td><td>' + render(this.description) + '</td></tr>';
+              }
+            }
+          };
+        }
         var tableOptions = {
           "data": data,
-          "pagination": 20,
+          "pagination": 1000,
           "tableDiv": "#siteTable",
           "filterDiv": "#siteTableFilter",
           "templateID": "siteTable_template"

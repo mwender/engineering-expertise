@@ -68,12 +68,7 @@
     <table class="table table-bordered table-hover">
       <colgroup><col style="width: 40%"><col style="width: 60%"></colgroup>
       {{#rows}}
-      {{#logic}}
-        {{category}}
-        {{subcategory}}
-        {{description}}
-        {{rowclass}}
-      {{/logic}}
+        {{{logic}}}
       {{/rows}}
     </table>
   </script>
@@ -82,23 +77,27 @@
     $( document ).ready(function(){
       var currentCategory = '';
       var rowNum = 0;
-      console.log('START: currentCategory = ' + currentCategory);
+
       var URL = "1vKrZxXRC5ykUTTDAnAXk2Y57csD4BM-a2Z5NyCa52G8";
-      Tabletop.init( {
+      Tabletop.init({
         key: URL,
         callback: showInfo,
         simpleSheet: true,
         orderby: 'category',
         postProcess: function(element){
-          if( currentCategory != element['category'] ){
-            currentCategory = element['category'];
-            rowNum++;
-          } else {
-            element['category'] = '';
+          element['logic'] = function(){
+            elementCategory = element['category'];
+            cssClass = elementCategory.toLowerCase().replace(new RegExp(' ','g'),'-');
+            element['cssclass'] = cssClass;
+            html = '<tr class="item ' + cssClass + '"><td>' + element['subcategory'] + '</td><td>' + element['description'] + '</td></tr>';
+            if( currentCategory != elementCategory ){
+              currentCategory = elementCategory;
+              html =  '<tr class="heading"><td colspan="3"><h4>' + elementCategory + ' <span class="btn btn-default show-cat" id="' + cssClass + '">Show</span></h4></td></tr><tr class="subheading ' + cssClass + '"><th class="header">Sub-category</th><th class="header">Description</th></tr>' + html;
+            }
+            return html;
           }
-          element['rowclass'] = 'cat-' + rowNum;
         }
-      } );
+      });
 
       $('.container').on('click', '.show-cat', function(){
         var catClass = $(this).attr('id');
@@ -108,24 +107,12 @@
         } else {
           $(this).html('Show');
         }
-        $('.ip.' + catClass).toggleClass('hidden');
+        $('.subheading.' + catClass).toggleClass('hidden');
+        $('.item.' + catClass).toggleClass('hidden');
       });
     });
 
     function showInfo(data,currentCategory){
-
-        for( x = 0; x < data.length; x++ ){
-          data[x]['logic'] = function(){
-            return function(text, render){
-              if( '' != this.category ){
-                var heading = '<tr class="hidden ip ' + this.rowclass + '"><th class="header">Sub-category</th><th class="header">Description</th></tr>';
-                return '<tr><td class="' + this.rowclass + '" colspan="3"><h4>' + this.category + ' <span class="btn btn-default show-cat" id="' + this.rowclass + '">Show</span></h4></td></tr>' + heading + '<tr class="hidden ip ' + this.rowclass + '"><td>' + render(this.subcategory) + '</td><td>' + render(this.description) + '</td></tr>';
-              } else {
-                return '<tr class="hidden ip ' + this.rowclass + '"><td>' + render(this.subcategory) + '</td><td>' + render(this.description) + '</td></tr>';
-              }
-            }
-          };
-        }
         var tableOptions = {
           "data": data,
           "pagination": 1000,
